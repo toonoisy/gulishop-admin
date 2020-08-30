@@ -4,14 +4,15 @@
     <el-button type="primary" icon="el-icon-plus" @click="showAddDialog">新增</el-button>
     <!-- 对话框 -->
     <el-dialog :title="`${form.id? '修改':'添加'}品牌`" :visible.sync="dialogVisible">
-      z style="width: 80%">
+      <!-- 表单 -->
+      <el-form :model="form" style="width:80%" :rules="rules" ref="form">
         <!-- 品牌名称 -->
         <!-- label-width 不写默认独占一行 -->
-        <el-form-item label="品牌名称" label-width="100px">
+        <el-form-item label="品牌名称" label-width="100px" prop="tmName">
           <el-input v-model="form.tmName" autocomplete="off"></el-input>
         </el-form-item>
         <!-- 品牌logo -->
-        <el-form-item label="品牌LOGO" label-width="100px">
+        <el-form-item label="品牌LOGO" label-width="100px" prop="logoUrl">
           <!-- 上传 -->
           <el-upload
             class="avatar-uploader"
@@ -83,6 +84,16 @@ export default {
         tmName: "",
         logoUrl: "",
       },
+      rules: {
+          tmName: [
+            { required: true, message: '请输入品牌名称', trigger: 'blur' },
+            { min: 2, max: 10, message: '长度在 2 到 10 个字符', trigger: 'blur' }
+          ],
+          logoUrl: [
+            // trigger写什么无所谓，整体校验时才有效果
+            { required: true, message: '请上传品牌logo', trigger: 'change' }
+          ],
+        }
     };
   },
   mounted() {
@@ -135,21 +146,28 @@ export default {
       this.form = {...row}; // 浅拷贝一个新对象，和row不是同一个
     },
     // 同时处理新增和修改
-    async save() {
-      const result = await this.$API.trademark.addOrUpdate(this.form);
-      try {
-        if (result.code === 200) {
-          this.$message.success("保存成功")
-          this.dialogVisible = false
-          this.getTmList()
-          // // 添加成功跳到最末页
-          // this.getTmList(this.pageCount);
+    save() {
+      this.$refs.form.validate(async (valid) => {
+        if (valid) {
+          try {
+            const result = await this.$API.trademark.addOrUpdate(this.form);
+            if (result.code === 200) {
+              this.$message.success("保存成功")
+              this.dialogVisible = false
+              this.getTmList()
+              // // 添加成功跳到最末页
+              // this.getTmList(this.pageCount);
+            } else {
+              this.$message.error("保存失败")
+            }
+          } catch (error) {
+            this.$message.error('请求失败 ' + error.message)
+          }
         } else {
-          this.$message.error("保存失败")
+          console.log('error submit!!');
+          return false;
         }
-      } catch (error) {
-        this.$message.error('请求失败 ' + error.message)
-      }
+      });
     },
     deleteTm(row) {
       this.$confirm(`确认要删除${row.tmName}吗`, '提示', {
