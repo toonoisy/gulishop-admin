@@ -102,7 +102,7 @@ export default {
   methods: {
     async getTmList(page = 1) {
       this.page = page;
-      const result = await this.$API.trademark.reqTrademarkList(
+      const result = await this.$API.trademark.reqbaseTrademark(
         this.page,
         this.limit
       );
@@ -154,8 +154,9 @@ export default {
             if (result.code === 200) {
               this.$message.success("保存成功")
               this.dialogVisible = false
+              // 添加成功留在第一页
               this.getTmList()
-              // // 添加成功跳到最末页
+              // // 添加成功跳到最末页（后台没给接口，分页器跟不上）
               // this.getTmList(this.pageCount);
             } else {
               this.$message.error("保存失败")

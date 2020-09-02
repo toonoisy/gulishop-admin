@@ -24,7 +24,11 @@ export default {
       return request.post(`/admin/product/baseTrademark/save`, trademark)
     }
   },
-  reqTrademarkList(page, limit) {
+  reqbaseTrademark(page, limit) {
     return request.get(`/admin/product/baseTrademark/${page}/${limit}`)
   },
+  // GET /admin/product/baseTrademark/getTrademarkList
+  reqTrademarkList() {
+    return request.get('/admin/product/baseTrademark/getTrademarkList')
+  }
 }

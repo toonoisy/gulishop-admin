@@ -166,7 +166,7 @@ export default {
       // 给所有属性值加isEdit标示，false即为查看模式，显示span而不是input
       this.form.attrValueList.forEach((item) => {
         // item.isEdit = false; // 错的
-        this.$set(item, "isEdit", false); // 数据劫持早就完了，后期用vm.$set或Vue.set才能添加响应式数据
+        this.$set(item, "isEdit", false); // 数据劫持早就完了，后期用vm.$set或Vue.set才能添加响应式数据（数据变页面也变）
       });
     },
     // 点击“添加属性值”
@@ -178,6 +178,10 @@ export default {
         attrId: this.form.id, // 有就在form中拿（修改时），没有就undefined
         isEdit: true, // 给新增的属性值加一个isEdit标示，true即为编辑模式，显示input而不是span
       });
+      // 永远是添加的最后一条获取焦点
+      this.$nextTick(() => {
+        this.$refs[this.form.attrValueList.length - 1].focus();
+      })
     },
     // input失焦或enter键抬起(原生事件)切换到查看模式（显示span），切换前要判断输入的值是否有效
     toView(row) {

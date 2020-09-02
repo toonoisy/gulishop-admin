@@ -36,6 +36,7 @@ export default {
       category1List: [], // 一级分类列表
       category2List: [], // 二级分类列表
       category3List: [], // 三级分类列表
+
     };
   },
   mounted() {
