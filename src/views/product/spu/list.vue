@@ -54,14 +54,18 @@
           </el-table-column>
         </el-table>
         <!-- SPU下所有SKU -->
-        <el-dialog :title="`${spu.spuName} => SKU列表`" :visible.sync="dialogTableVisible" :before-close="handleBeforeClose">
+        <el-dialog
+          :title="`${spu.spuName} => SKU列表`"
+          :visible.sync="dialogTableVisible"
+          :before-close="handleBeforeClose"
+        >
           <el-table :data="skuList" v-loading="loading">
             <el-table-column property="skuName" label="名称" width="150"></el-table-column>
             <el-table-column property="price" label="价格"></el-table-column>
             <el-table-column property="weight" label="重量"></el-table-column>
             <el-table-column property="skuDefaultImg" label="默认图片">
               <template slot-scope="{row}">
-                <img :src="row.skuDefaultImg" alt="" width="100">
+                <img :src="row.skuDefaultImg" alt width="100" />
               </template>
             </el-table-column>
           </el-table>
@@ -89,7 +93,7 @@
         @saveSuccess="saveSuccess"
         @cancelBack="cancelBack"
       ></SpuForm>
-      <SkuForm v-show="skuFormVisible === true"></SkuForm>
+      <SkuForm ref="sku" v-show="skuFormVisible === true" :visible.sync="skuFormVisible"></SkuForm>
     </el-card>
   </div>
 </template>
@@ -166,6 +170,7 @@ export default {
     // 点击“添加SKU”
     showAddSkuForm(row) {
       this.skuFormVisible = true;
+      this.$refs.sku.initAddSkuData(row, this.category1Id, this.category2Id);
     },
     // spu中保存成功，要判断是新增返回还是修改返回
     saveSuccess() {
@@ -209,12 +214,12 @@ export default {
   // 控制三级列表可操作性
   // 可操作与否和list显示与否一致，和spu/sku显示与否是反着的
   watch: {
-    spuFormVisible(newVal){
+    spuFormVisible(newVal) {
       this.listDivVisible = !newVal;
     },
-    skuFormVisible(newVal){
+    skuFormVisible(newVal) {
       this.listDivVisible = !newVal;
-    }
+    },
   },
   components: {
     SpuForm,
