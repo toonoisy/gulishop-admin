@@ -157,7 +157,8 @@ export default {
               // 添加成功留在第一页
               this.getTmList()
               // // 添加成功跳到最末页（后台没给接口，分页器跟不上）
-              // this.getTmList(this.pageCount);
+              // this.page = this.pageCount;
+              // this.getTmList(this.page);
             } else {
               this.$message.error("保存失败")
             }
